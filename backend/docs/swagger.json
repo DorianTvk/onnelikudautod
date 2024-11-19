@@ -222,17 +222,15 @@
     "NewCar": {
       "type": "object",
       "properties": {
-        "clientName": { 
-          "type": "string" 
-        },
-        "carName": { 
-          "type": "string" 
-        },
-        "price": { 
-          "type": "number" 
-        }
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "clientName": { "type": "string" },
+        "carName": { "type": "string" },
+        "clientemail": { "type": "string" },
+        "clientnumber": { "type": "string" }
+
       },
-      "required": ["clientName", "carName"]
+      "required": ["name"]
     },
     "CarQueue": {
       "type": "object",
@@ -240,7 +238,9 @@
         "id": { "type": "integer" },
         "carName": { "type": "string" },
         "clientName": { "type": "string" },
-        "status": { "type": "string" },
+        "queueStatus": { "type": "string" },
+        "details" : { "type": "string" },
+        "serviceDuration" : { "type": "string" },
         "buttons": {
           "type": "array",
           "items": { "type": "string" }
@@ -250,9 +250,12 @@
     "CarQueueUpdate": {
       "type": "object",
       "properties": {
+        "id": { "type": "integer" },
         "carName": { "type": "string" },
         "clientName": { "type": "string" },
-        "status": { "type": "string" }
+        "queueStatus": { "type": "string" },
+        "details" : { "type": "string" },
+        "serviceDuration" : { "type": "string" }
       }
     }
   }

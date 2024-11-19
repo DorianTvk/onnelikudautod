@@ -26,29 +26,38 @@ app.get("/", (req, res) => {
     res.send(`Server running. Docs at <a href='http://${host}:${port}/docs'>/docs</a>`);
 });
 
-// Get all happy cars
+// Get all happy car repairs
 app.get("/Happy-Car-Repairs", (req, res) => {
     res.json(happycarrepairs.map(({ id, name, buttons }) => ({
         id, name, buttons: buttons || []
     })));
 });
 
-// Add a new happy car
+// Add a new happy car repair
 app.post("/Happy-Car-Repairs", (req, res) => {
-    const { name, price } = req.body;
-    if (!name || typeof name !== "string" || name.trim() === "") {
-        return res.status(400).json({ error: "Missing required field 'name'" });
+    const { clientName, carName, price } = req.body;
+
+    // Validate required fields
+    if (!clientName || typeof clientName !== "string" || clientName.trim() === "") {
+        return res.status(400).json({ error: "Missing required field 'clientName'" });
     }
+    if (!carName || typeof carName !== "string" || carName.trim() === "") {
+        return res.status(400).json({ error: "Missing required field 'carName'" });
+    }
+
+    // Create new car object and add to list
     const newAuto = {
         id: createId(),
-        name: name.trim(),
+        clientName: clientName.trim(),
+        carName: carName.trim(),
         price: price ? parseFloat(price) : null
     };
+
     happycarrepairs.push(newAuto);
     res.status(201).json(newAuto);
 });
 
-// Get car by ID
+// Get car repair by ID
 app.get("/Happy-Car-Repairs/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const auto = happycarrepairs.find(a => a.id === id);
@@ -56,23 +65,41 @@ app.get("/Happy-Car-Repairs/:id", (req, res) => {
     res.json(auto);
 });
 
-// Update car details
+// Update car repair details
+// Update car repair details
 app.put("/Happy-Car-Repairs/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const auto = happycarrepairs.find(a => a.id === id);
-    if (!auto) return res.status(404).json({ error: "Car not found" });
 
+    // Check if the car exists
+    if (!auto) {
+        return res.status(404).json({ error: "Car not found" });
+    }
+
+    // Log the incoming request body for debugging
+    console.log("Request body:", req.body);
+
+    // Destructure the request body for 'name' and 'price'
     const { name, price } = req.body;
+
+    // Validate the required field 'name'
     if (!name || typeof name !== "string" || name.trim() === "") {
         return res.status(400).json({ error: "Missing required field 'name'" });
     }
-    auto.name = name.trim();
-    auto.price = price ? parseFloat(price) : auto.price;
 
+    // Update the car repair details
+    auto.name = name.trim();
+    if (price !== undefined && price !== null) {
+        auto.price = parseFloat(price);
+    }
+
+    // Return the updated car object
     res.json(auto);
 });
 
-// Delete car
+
+
+// Delete car repair
 app.delete("/Happy-Car-Repairs/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const index = happycarrepairs.findIndex(a => a.id === id);
@@ -82,12 +109,12 @@ app.delete("/Happy-Car-Repairs/:id", (req, res) => {
     res.json({ message: "Car deleted" });
 });
 
-// Get cars in the queue
+// Get all cars in the queue
 app.get("/Car-Repair-Queue", (req, res) => {
     res.json(Queue);
 });
 
-// Get car in the queue by ID
+// Get car from the queue by ID
 app.get("/Car-Repair-Queue/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const auto = Queue.find(a => a.id === id);
@@ -95,7 +122,7 @@ app.get("/Car-Repair-Queue/:id", (req, res) => {
     res.json(auto);
 });
 
-// Add car to queue
+// Add car to the queue
 app.post("/Car-Repair-Queue/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const auto = happycarrepairs.find(a => a.id === id);
@@ -112,7 +139,7 @@ app.post("/Car-Repair-Queue/:id", (req, res) => {
     res.json({ message: `Car ${name} added to the queue`, auto: { id, name, status } });
 });
 
-// Update car status in queue
+// Update car status in the queue
 app.put("/Car-Repair-Queue/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const autoInQueue = Queue.find(a => a.id === id);
@@ -146,7 +173,7 @@ app.delete("/Car-Repair-Queue/:id", (req, res) => {
 
 // Helper function to generate unique IDs
 function createId() {
-    return Math.max(...happycarrepairs.map(a => a.id)) + 1;
+    return happycarrepairs.length === 0 ? 1 : Math.max(...happycarrepairs.map(a => a.id)) + 1;
 }
 
 app.listen(port, () => {
