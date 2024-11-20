@@ -206,57 +206,52 @@
     }
   },
   "definitions": {
-    "Car": {
-      "type": "object",
-      "properties": {
-        "id": { "type": "integer" },
-        "name": { "type": "string" },
-        "price": { "type": "number" },
-        "buttons": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "clientName": { "type": "string" }
-      }
-    },
-    "NewCar": {
-      "type": "object",
-      "properties": {
-        "name": { "type": "string" },
-        "price": { "type": "number" },
-        "clientName": { "type": "string" },
-        "carName": { "type": "string" },
-        "clientemail": { "type": "string" },
-        "clientnumber": { "type": "string" }
-
-      },
-      "required": ["name"]
-    },
-    "CarQueue": {
-      "type": "object",
-      "properties": {
-        "id": { "type": "integer" },
-        "carName": { "type": "string" },
-        "clientName": { "type": "string" },
-        "queueStatus": { "type": "string" },
-        "details" : { "type": "string" },
-        "serviceDuration" : { "type": "string" },
-        "buttons": {
-          "type": "array",
-          "items": { "type": "string" }
+      "Car": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "name": { "type": "string" },
+          "price": { "type": "number" },
+          "clientName": { "type": "string" },
+          "clientnumber": { "type": "string" }
         }
-      }
-    },
-    "CarQueueUpdate": {
-      "type": "object",
-      "properties": {
-        "id": { "type": "integer" },
-        "carName": { "type": "string" },
-        "clientName": { "type": "string" },
-        "queueStatus": { "type": "string" },
-        "details" : { "type": "string" },
-        "serviceDuration" : { "type": "string" }
+      },
+      "NewCar": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "price": { "type": "number" },
+          "clientName": { "type": "string" },
+          "carName": { "type": "string" },
+          "clientemail": { "type": "string" },
+          "clientnumber": { "type": "string" }
+        },
+        "required": ["name", "clientName", "carName", "clientemail"]
+      },
+      "CarQueue": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "carName": { "type": "string" },
+          "clientName": { "type": "string" },
+          "queueStatus": { "type": "string" },
+          "details": { "type": "string" },
+          "serviceDuration": { "type": "string" },
+          "clientnumber": { "type": "string" }
+        }
+      },
+      "CarQueueUpdate": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "carName": { "type": "string" },
+          "clientName": { "type": "string" },
+          "queueStatus": { "type": "string" },
+          "details": { "type": "string" },
+          "serviceDuration": { "type": "string" }
+        },
+        "required": ["id"]
       }
     }
   }
-}
+  

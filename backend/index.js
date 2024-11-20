@@ -28,29 +28,26 @@ app.get("/", (req, res) => {
 
 // Get all happy car repairs
 app.get("/Happy-Car-Repairs", (req, res) => {
-    res.json(happycarrepairs.map(({ id, name, buttons }) => ({
-        id, name, buttons: buttons || []
-    })));
+    res.json(happycarrepairs);
 });
 
 // Add a new happy car repair
 app.post("/Happy-Car-Repairs", (req, res) => {
-    const { clientName, carName, price } = req.body;
+    const { name, clientName, carName, clientemail, clientnumber, price } = req.body;
 
     // Validate required fields
-    if (!clientName || typeof clientName !== "string" || clientName.trim() === "") {
-        return res.status(400).json({ error: "Missing required field 'clientName'" });
-    }
-    if (!carName || typeof carName !== "string" || carName.trim() === "") {
-        return res.status(400).json({ error: "Missing required field 'carName'" });
+    if (!name || !clientName || !carName || !clientemail) {
+        return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Create new car object and add to list
     const newAuto = {
         id: createId(),
-        clientName: clientName.trim(),
-        carName: carName.trim(),
-        price: price ? parseFloat(price) : null
+        name,
+        clientName,
+        carName,
+        clientemail,
+        clientnumber,
+        price: price || 0
     };
 
     happycarrepairs.push(newAuto);
@@ -66,38 +63,27 @@ app.get("/Happy-Car-Repairs/:id", (req, res) => {
 });
 
 // Update car repair details
-// Update car repair details
 app.put("/Happy-Car-Repairs/:id", (req, res) => {
     const id = parseInt(req.params.id);
     const auto = happycarrepairs.find(a => a.id === id);
 
-    // Check if the car exists
     if (!auto) {
         return res.status(404).json({ error: "Car not found" });
     }
 
-    // Log the incoming request body for debugging
-    console.log("Request body:", req.body);
-
-    // Destructure the request body for 'name' and 'price'
     const { name, price } = req.body;
 
-    // Validate the required field 'name'
     if (!name || typeof name !== "string" || name.trim() === "") {
         return res.status(400).json({ error: "Missing required field 'name'" });
     }
 
-    // Update the car repair details
     auto.name = name.trim();
     if (price !== undefined && price !== null) {
         auto.price = parseFloat(price);
     }
 
-    // Return the updated car object
     res.json(auto);
 });
-
-
 
 // Delete car repair
 app.delete("/Happy-Car-Repairs/:id", (req, res) => {
@@ -128,8 +114,7 @@ app.post("/Car-Repair-Queue/:id", (req, res) => {
     const auto = happycarrepairs.find(a => a.id === id);
     if (!auto) return res.status(404).json({ error: "Car not found" });
 
-    const name = req.body.name || auto.name;
-    const status = req.body.status || "In Queue";
+    const { name = auto.name, status = "In Queue" } = req.body;
 
     if (Queue.some(a => a.id === id)) {
         return res.status(400).json({ error: "Car is already in queue" });
@@ -150,7 +135,6 @@ app.put("/Car-Repair-Queue/:id", (req, res) => {
 
     const { name, status } = req.body;
 
-    // Update only the fields provided in the request
     if (name) {
         autoInQueue.name = name;
     }
