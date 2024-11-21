@@ -9,7 +9,7 @@
   "basePath": "/",
   "schemes": ["http"],
   "paths": {
-    "/Happy-Car-Repairs": {
+    "/services": {
       "get": {
         "tags": ["Car Services"],
         "summary": "All happy cars",
@@ -45,7 +45,7 @@
         }
       }
     },
-    "/Happy-Car-Repairs/{id}": {
+    "/services/{id}": {
       "get": {
         "tags": ["Car Services"],
         "summary": "Find car by ID",
@@ -108,7 +108,7 @@
         }
       }
     },
-    "/Car-Repair-Queue": {
+    "/queues": {
       "get": {
         "tags": ["Queue"],
         "summary": "All cars in the queue",
@@ -125,7 +125,7 @@
         }
       }
     },
-    "/Car-Repair-Queue/{id}": {
+    "/queues/{id}": {
       "get": {
         "tags": ["Queue"],
         "summary": "Find car in queue by ID",
@@ -203,55 +203,167 @@
           "404": { "description": "Car not found in queue" }
         }
       }
+    },
+    "/clients": {
+      "get": {
+        "tags": ["Clients"],
+        "summary": "All clients",
+        "description": "Returns all clients",
+        "responses": {
+          "200": {
+            "description": "Returns all clients",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Client"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Clients"],
+        "summary": "Add a new client",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewClient"
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "New client added" },
+          "400": { "description": "Invalid data" }
+        }
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "tags": ["Clients"],
+        "summary": "Find client by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns client details",
+            "schema": {
+              "$ref": "#/definitions/Client"
+            }
+          },
+          "404": { "description": "Client not found" }
+        }
+      },
+      "put": {
+        "tags": ["Clients"],
+        "summary": "Update client data",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewClient"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Client updated" },
+          "404": { "description": "Client not found" }
+        }
+      },
+      "delete": {
+        "tags": ["Clients"],
+        "summary": "Delete a client",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Client deleted" },
+          "404": { "description": "Client not found" }
+        }
+      }
     }
   },
   "definitions": {
-      "Car": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "integer" },
-          "name": { "type": "string" },
-          "price": { "type": "number" },
-          "clientName": { "type": "string" },
-          "clientnumber": { "type": "string" }
-        }
-      },
-      "NewCar": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "price": { "type": "number" },
-          "clientName": { "type": "string" },
-          "carName": { "type": "string" },
-          "clientemail": { "type": "string" },
-          "clientnumber": { "type": "string" }
-        },
-        "required": ["name", "clientName", "carName", "clientemail"]
-      },
-      "CarQueue": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "integer" },
-          "carName": { "type": "string" },
-          "clientName": { "type": "string" },
-          "queueStatus": { "type": "string" },
-          "details": { "type": "string" },
-          "serviceDuration": { "type": "string" },
-          "clientnumber": { "type": "string" }
-        }
-      },
-      "CarQueueUpdate": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "integer" },
-          "carName": { "type": "string" },
-          "clientName": { "type": "string" },
-          "queueStatus": { "type": "string" },
-          "details": { "type": "string" },
-          "serviceDuration": { "type": "string" }
-        },
-        "required": ["id"]
+    "Car": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "price": { "type": "number" }
       }
+    },
+    "NewCar": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "number" }
+      },
+      "required": ["name"]
+    },
+    "CarQueue": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "carName": { "type": "string" },
+        "clientName": { "type": "string" },
+        "queueStatus": { "type": "string" },
+        "details": { "type": "string" },
+        "serviceDuration": { "type": "string" },
+        "clientnumber": { "type": "string" }
+      }
+    },
+    "CarQueueUpdate": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "carName": { "type": "string" },
+        "clientName": { "type": "string" },
+        "queueStatus": { "type": "string" },
+        "details": { "type": "string" },
+        "serviceDuration": { "type": "string" }
+      },
+      "required": ["id"]
+    },
+    "Client": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phoneNumber": { "type": "string" }
+
+      }
+    },
+    "NewClient": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phoneNumber": { "type": "string" }
+
+      },
+      "required": ["name", "email", "phoneNumber"]
     }
   }
-  
+}
